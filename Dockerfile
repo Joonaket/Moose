@@ -1,33 +1,29 @@
-# Use a base image that includes Node.js
-FROM node:14.18.1-alpine
+# Use an official Node runtime as the base image
+FROM node:14-alpine as build
 
-# Create a non-root user
-RUN addgroup -g 1001 -S nodejs \
-    && adduser -S nodejs -u 1001
-
-# Set up a working directory in the container for your application
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the application code into the container
-COPY . /app
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
 
-# Set the ownership of the app directory to the non-root user
-RUN chown -R nodejs:nodejs /app
+# Install dependencies
+RUN npm install
 
-# Switch to the non-root user
-USER nodejs
+# Copy the remaining application code to the working directory
+COPY . .
 
-# Install dependencies for production
-RUN npm ci --only=production
+# Build the React app
+RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Use Nginx as a lightweight HTTP server
+FROM nginx:alpine
 
-# Set environment variables
-ENV NODE_ENV=production
+# Copy the built React app from the previous stage to the Nginx directory
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Healthcheck to monitor the application's health
-HEALTHCHECK --interval=30s --timeout=5s CMD curl -f http://localhost:3000 || exit 1
+# Expose port 80 to the outside world
+EXPOSE 80
 
-# Set the command to run your application
-CMD ["npm", "start"]
+# Start Nginx server when the container launches
+CMD ["nginx", "-g", "daemon off;"]
