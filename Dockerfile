@@ -23,9 +23,7 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 
-ENV PORT=8080
-# Expose port 8080 to the outside world
-EXPOSE $PORT
+
 
 # Start Nginx server when the container launches
 CMD ["nginx", "-g", "daemon off;"]
