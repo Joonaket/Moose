@@ -1,0 +1,19 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/moose247/moose247', '.']
+
+  # Step 2: Push the Docker image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/moose247/moose247']
+
+  # Step 3: Deploy the Docker image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'your-cloud-run-service'
+      - '--image=gcr.io/moose247/moose247'
+      - '--region=us-cental1'
+      - '--platform=managed'
+      # Add additional flags as needed, such as --allow-unauthenticated for public access
