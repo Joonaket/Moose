@@ -1,5 +1,5 @@
 # Use an official Node runtime as the base image
-FROM node:14-alpine as build
+FROM node:18-alpine as build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,13 +17,13 @@ COPY . .
 RUN npm run build
 
 # Use Nginx as a lightweight HTTP server
-FROM nginx:alpine
+FROM nginx:1.25.4
 
 # Copy the built React app from the previous stage to the Nginx directory
+
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/build /usr/share/nginx/html
 
 
 
 
-# Start Nginx server when the container launches
-CMD ["nginx", "-g", "daemon off;"]
