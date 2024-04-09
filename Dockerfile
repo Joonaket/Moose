@@ -18,6 +18,7 @@ RUN npm run build
 
 # Use Nginx as a lightweight HTTP server
 FROM nginx:1.25.4
+RUN apt-get update && apt-get install -y npm
 
 # Copy the built React app from the previous stage to the Nginx directory
 
