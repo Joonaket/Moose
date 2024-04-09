@@ -1,4 +1,4 @@
-# Use an official Node runtime as the base image
+# Use an official Node runtime as the base image for building the React app
 FROM node:14-alpine as build
 
 # Set the working directory in the container
@@ -16,15 +16,15 @@ COPY . .
 # Build the React app
 RUN npm run build
 
-# Use Nginx as a lightweight HTTP server
+# Use Nginx as a lightweight HTTP server for serving the built React app
 FROM nginx:1.25.4
+
+# Install npm in the Nginx container (if required)
 RUN apt-get update && apt-get install -y npm
 
 # Copy the built React app from the previous stage to the Nginx directory
-
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/build /usr/share/nginx/html
 
-CMD ["npm", "start"]
-
-
+# Start Nginx to serve the React app
+CMD ["nginx", "-g", "daemon off;"]
