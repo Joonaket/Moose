@@ -20,6 +20,8 @@ const Login = ({setLoggedIn}) => {
 
         try {
             // Make a request to your backend login endpoint
+
+            console.log("Trying login on adress:",tempIP)
             const response = await axios.post(tempIP+"/login", {
                 username,
                 password,

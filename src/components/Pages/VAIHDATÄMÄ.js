@@ -7,10 +7,10 @@ let sinunIP = "moosebackend-js7ux2g4rq-lz.a.run.app";        //Laita tämän muu
 let vaihdettavaIP = "http://"+sinunIP;
 
 if (vaihdettavaIP === "http://") {
-    paikallinenIP = baseIP + ":8080";
+    paikallinenIP = baseIP;
 }
 else{
-    paikallinenIP = vaihdettavaIP+":8080";
+    paikallinenIP = vaihdettavaIP;
 }
 
 
